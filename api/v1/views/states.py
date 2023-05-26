@@ -57,7 +57,7 @@ def states_id(state_id):
     else:
         try:
             json_dict = request.get_json()
-        except:
+        except Exception:
             abort(400, "Not a JSON")
 
         if not json_dict:

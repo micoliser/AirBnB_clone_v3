@@ -5,7 +5,8 @@ from api.v1.views import app_views
 from models import storage
 
 
-@app_views.route("places/<place_id>/amenities", methods=["GET"], strict_slashes=False)
+@app_views.route("places/<place_id>/amenities", methods=["GET"],
+                 strict_slashes=False)
 def places_amenities(place_id):
     """ configures the places_amenities route """
 
@@ -21,8 +22,8 @@ def places_amenities(place_id):
 
 @app_views.route("places/<place_id>/amenities/<amenity_id>",
                  methods=["DELETE", "POST"], strict_slashes=False)
-def amenities_id(place_id, amenity_id):
-    """ configures the places/<place_id>/amenities/<amenity_id> route """
+def places_amenities_id(place_id, amenity_id):
+    """ configures the places/<place_id>/amenities/ route """
 
     place = storage.get("Place", place_id)
     amenity = storage.get("Amenity", amenity_id)
