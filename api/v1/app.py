@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """ This module starts a flask application """
 import os
-from flask import Flask, make_response, jsonify
+from flask import Flask, jsonify
 from models import storage
 from api.v1.views import app_views
 from flask_cors import CORS
@@ -23,7 +23,7 @@ def remove(exception):
 def not_found(e):
     """ configures 404 error response """
 
-    return make_response(jsonify({"error": "Not found"}), 404)
+    return jsonify({"error": "Not found"}), e.code
 
 
 if __name__ == "__main__":

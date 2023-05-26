@@ -9,7 +9,7 @@ from models import storage
 def status():
     """ configures the status route """
 
-    return jsonify({"status": "ok"})
+    return jsonify({"status": "OK"})
 
 
 @app_views.route("/stats", strict_slashes=False)
