@@ -88,7 +88,5 @@ def places_id(place_id):
             if key not in keys_to_ignore:
                 setattr(place, key, val)
 
-        storage.new(place)
         storage.save()
-
         return jsonify(place.to_dict()), 200

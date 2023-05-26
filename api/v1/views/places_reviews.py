@@ -81,7 +81,5 @@ def reviews_id(review_id):
             if key not in keys_to_ignore:
                 setattr(review, key, val)
 
-        storage.new(review)
         storage.save()
-
         return jsonify(review.to_dict()), 200

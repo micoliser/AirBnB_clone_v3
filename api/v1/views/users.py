@@ -71,7 +71,5 @@ def users_id(user_id):
             if key not in keys_to_ignore:
                 setattr(user, key, val)
 
-        storage.new(user)
         storage.save()
-
         return jsonify(user.to_dict()), 200

@@ -59,8 +59,9 @@ def states_id(state_id):
             abort(400, "Not a JSON")
 
         keys_to_ignore = ["id", "created_at", "updated_at"]
+        state_dict = state.to_dict()
         for key, val in json_dict.items():
-            if key not in keys_to_ignore:
+            if key not in keys_to_ignore and key in state_dict:
                 setattr(state, key, val)
 
         storage.save()

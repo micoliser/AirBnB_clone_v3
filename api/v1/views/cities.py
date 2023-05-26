@@ -69,7 +69,5 @@ def city_id(city_id):
             if key not in keys_to_ignore:
                 setattr(city, key, val)
 
-        storage.new(city)
         storage.save()
-
         return jsonify(city.to_dict()), 200
