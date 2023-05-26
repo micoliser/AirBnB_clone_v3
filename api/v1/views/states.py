@@ -35,7 +35,7 @@ def states():
         return jsonify(new_state.to_dict()), 201
 
 
-@app_views.route("/states/<state_id>", methods=["GET", "DELETE", "PUT"]
+@app_views.route("/states/<state_id>", methods=["GET", "DELETE", "PUT"],
                  strict_slashes=False)
 def states_id(state_id):
     """ configures the states/<state_id> route """
