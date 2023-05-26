@@ -26,13 +26,15 @@ def state_cities(state_id):
         except Exception:
             abort(400, "Not a JSON")
 
+        if not json_dict:
+            abort(400, "Not a JSON")
+
         try:
             name = json_dict["name"]
         except KeyError:
             abort(400, "Missing name")
 
-        new_city = City()
-        new_city.name = name
+        new_city = City(**json_dict)
         new_city.state_id = state_id
 
         storage.new(new_city)
@@ -62,6 +64,9 @@ def city_id(city_id):
         try:
             json_dict = request.get_json()
         except Exception:
+            abort(400, "Not a JSON")
+
+        if not json_dict:
             abort(400, "Not a JSON")
 
         keys_to_ignore = ["id", "created_at", "updated_at"]

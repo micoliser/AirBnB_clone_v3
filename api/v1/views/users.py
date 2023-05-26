@@ -21,6 +21,9 @@ def users():
         except Exception:
             abort(400, "Not a JSON")
 
+        if not json_dict:
+            abort(400, "Not a JSON")
+
         try:
             email = json_dict["email"]
         except KeyError:
@@ -31,11 +34,7 @@ def users():
         except KeyError:
             abort(400, "Missing password")
 
-        new_user = User()
-        new_user.email = email
-        new_user.password = password
-        new_user.first_name = json_dict.get("first_name")
-        new_user.last_name = json_dict.get("last_name")
+        new_user = User(**json_dict)
 
         storage.new(new_user)
         storage.save()
@@ -64,6 +63,9 @@ def users_id(user_id):
         try:
             json_dict = request.get_json()
         except Exception:
+            abort(400, "Not a JSON")
+
+        if not json_dict:
             abort(400, "Not a JSON")
 
         keys_to_ignore = ["id", "email", "created_at", "updated_at"]

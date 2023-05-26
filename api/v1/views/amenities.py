@@ -21,13 +21,15 @@ def amenities():
         except Exception:
             abort(400, "Not a JSON")
 
+        if not json_dict:
+            abort(400, "Not a JSON")
+
         try:
             name = json_dict["name"]
         except KeyError:
             abort(400, "Missing name")
 
-        new_amenity = Amenity()
-        new_amenity.name = name
+        new_amenity = Amenity(**json_dict)
 
         storage.new(new_amenity)
         storage.save()
@@ -56,6 +58,9 @@ def amenities_id(amenity_id):
         try:
             json_dict = request.get_json()
         except Exception:
+            abort(400, "Not a JSON")
+
+        if not json_dict:
             abort(400, "Not a JSON")
 
         keys_to_ignore = ["id", "created_at", "updated_at"]

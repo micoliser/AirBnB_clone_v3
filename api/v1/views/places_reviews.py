@@ -25,6 +25,9 @@ def reviews(place_id):
         except Exception:
             abort(400, "Not a JSON")
 
+        if not json_dict:
+            abort(400, "Not a JSON")
+
         try:
             user_id = json_dict["user_id"]
         except KeyError:
@@ -39,10 +42,8 @@ def reviews(place_id):
         except KeyError:
             abort(400, "Missing text")
 
-        new_review = Review()
-        new_review.user_id = user_id
+        new_review = Review(**json_dict)
         new_review.place_id = place_id
-        new_review.text = text
 
         storage.new(new_review)
         storage.save()
@@ -71,6 +72,9 @@ def reviews_id(review_id):
         try:
             json_dict = request.get_json()
         except Exception:
+            abort(400, "Not a JSON")
+
+        if not json_dict:
             abort(400, "Not a JSON")
 
         keys_to_ignore = [

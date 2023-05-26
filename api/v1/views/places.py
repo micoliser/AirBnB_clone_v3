@@ -25,6 +25,9 @@ def places(city_id):
         except Exception:
             abort(400, "Not a JSON")
 
+        if not json_dict:
+            abort(400, "Not a JSON")
+
         try:
             user_id = json_dict["user_id"]
         except KeyError:
@@ -39,17 +42,8 @@ def places(city_id):
         except KeyError:
             abort(400, "Missing name")
 
-        new_place = Place()
-        new_place.user_id = user_id
+        new_place = Place(**json_dict)
         new_place.city_id = city_id
-        new_place.name = name
-        new_place.number_rooms = json_dict.get("number_rooms")
-        new_place.number_bathrooms = json_dict.get("number_bathrooms")
-        new_place.description = json_dict.get("description")
-        new_place.max_guest = json_dict.get("max_guest")
-        new_place.price_by_night = json_dict.get("price_by_night")
-        new_place.latitude = json_dict.get("latitude")
-        new_place.longitude = json_dict.get("longitude")
 
         storage.new(new_place)
         storage.save()
@@ -78,6 +72,9 @@ def places_id(place_id):
         try:
             json_dict = request.get_json()
         except Exception:
+            abort(400, "Not a JSON")
+
+        if not json_dict:
             abort(400, "Not a JSON")
 
         keys_to_ignore = [
