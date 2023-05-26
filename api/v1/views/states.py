@@ -21,13 +21,15 @@ def states():
         except Exception:
             abort(400, "Not a JSON")
 
+        if not json_dict:
+            abort(400, "Not a JSON")
+
         try:
             name = json_dict["name"]
         except KeyError:
             abort(400, "Missing name")
 
-        new_state = State()
-        new_state.name = name
+        new_state = State(**json_dict)
 
         storage.new(new_state)
         storage.save()
@@ -55,7 +57,10 @@ def states_id(state_id):
     else:
         try:
             json_dict = request.get_json()
-        except Exception:
+        except:
+            abort(400, "Not a JSON")
+
+        if not json_dict:
             abort(400, "Not a JSON")
 
         keys_to_ignore = ["id", "created_at", "updated_at"]
