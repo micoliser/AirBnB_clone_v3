@@ -87,3 +87,68 @@ def places_id(place_id):
 
         storage.save()
         return jsonify(place.to_dict()), 200
+
+
+@app_views.route("/places_search", methods=["POST"], strict_slashes=False)
+def places_search():
+    """ configures route for places_search """
+
+    try:
+        json_dict = request.get_json()
+    except Exception:
+        abort(400, "Not a JSON")
+
+    places = storage.all(Place)
+    places_dict = [place.to_dict() for place in places.values()]
+
+    if not json_dict:
+        return jsonify(places_dict)
+
+    if not json_dict["states"] and not json_dict["cities"] and not json_dict["amenities"]:
+        return jsonify(places_dict)
+
+    result = []
+
+    if json_dict.get("states"):
+        for state_id in json_dict["states"]:
+            state = storage.get("State", state_id)
+            if state:
+                for city in state.cities:
+                    for place in city.places:
+                        if place not in result:
+                            result.append(place)
+
+    if json_dict.get("cities"):
+        for city_id in json_dict["cities"]:
+            city = storage.get("City", city_id)
+            if city:
+                for place in city.places:
+                    if place not in result:
+                        result.append(place)
+
+    if json_dict.get("amenities"):
+        if not result:
+            result = [place for place in places.values()]
+        filtered = []
+        amenities = []
+        for amenity_id in json_dict["amenities"]:
+            amenities.append(storage.get("Amenity", amenity_id))
+
+        for place in result:
+            place_amenities = place.amenities
+            has_all = True
+            for amenity in amenities:
+                if amenity not in place_amenities:
+                    has_all = False
+                    break
+
+            if has_all:
+                filtered.append(place)
+
+        filtered_dict = [place.to_dict() for place in filtered]
+
+        return jsonify(filtered_dict)
+
+    result_dict = [place.to_dict() for place in result]
+
+    return jsonify(result_dict)
