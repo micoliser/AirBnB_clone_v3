@@ -147,7 +147,12 @@ def places_search():
             if has_all:
                 filtered.append(place)
 
-        filtered_dict = [place.to_dict() for place in filtered]
+        filtered_dict = []
+        for place in filtered:
+            place_dict = place.to_dict()
+            if "amenities" in place_dict:
+                del place_dict["amenities"]
+            filtered_dict.append(place_dict)
 
         return jsonify(filtered_dict)
 
