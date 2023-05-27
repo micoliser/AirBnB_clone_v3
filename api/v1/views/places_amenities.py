@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """ Configures RESTful api for the places_amenities route """
+from os import getenv
 from flask import jsonify, request, abort
 from api.v1.views import app_views
 from models import storage
@@ -27,23 +28,32 @@ def places_amenities_id(place_id, amenity_id):
 
     place = storage.get("Place", place_id)
     amenity = storage.get("Amenity", amenity_id)
+    storage_type = getenv("HBNB_TYPE_STORAGE")
 
     if not amenity or not place:
         abort(404)
 
     if request.method == "DELETE":
-        if amenity.place_id != place_id:
+        if amenity not in place.amenities:
             abort(404)
 
-        place.amenities.remove(amenity)
+        if storage_type == "db":
+            place.amenities.remove(amenity)
+        else:
+            place.amenity_ids.remove(amenity_id)
+
         storage.save()
 
         return jsonify({}), 200
     else:
-        if amenity.place_id == place_id:
+        if amenity in place.amenities:
             return jsonify(amenity.to_dict()), 200
 
-        amenity.place_id = place_id
+        if storage_type == "db":
+            place.amenities.append(amenity)
+        else:
+            place.amenity_ids.append(amenity_id)
+
         storage.save()
 
         return jsonify(amenity.to_dict()), 201
