@@ -104,7 +104,9 @@ def places_search():
     if not json_dict:
         return jsonify(places_dict)
 
-    if not json_dict["states"] and not json_dict["cities"] and not json_dict["amenities"]:
+    if not json_dict.get("states") and (
+            not json_dict.get("cities")) and (
+            not json_dict.get("amenities")):
         return jsonify(places_dict)
 
     result = []
